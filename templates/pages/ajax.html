@@ -1,0 +1,67 @@
+<script>
+    $('#review_post_btn').on('click',function(){
+        if($("#id_review").val() == ''){
+            alert("dont leave blank spaces")
+            return true;
+       }
+            
+        let rating=$('#id_rating').val();
+        let review=$('#id_review').val();
+        let hotel=$('#id_hotel').val();
+        let user=$('#id_user').val();
+        let current_review_id=$("#current_review_id").val();
+        let existing_review_rating=$("#existing_review_rating").val();
+        
+
+        let csr=$("input[name=csrfmiddlewaretoken]").val();
+        console.log(csr)
+
+        output='';
+        $.ajax({
+            url:"{% url 'pages:save_review' %}",
+            method:"POST",
+            data:{review_id:current_review_id,rating:rating,review:review,hotel:hotel,user:user,existing_review_rating:existing_review_rating,csrfmiddlewaretoken:csr},
+            success:function(data){
+                console.log(data.status)
+                console.log(data.a_review_id)
+                if(data.status == "success"){
+                    $("#updating_data").append("<input id='current_review_id' name='reviewid' type='hidden' value='"+data.a_review_id+"'> <input id='existing_review_rating' name='review_rating' type='hidden' value='"+data.rating+"'>")
+                    
+                    $('#id_review').val('');
+                    $("#existing_review_rating").val(data.rating);
+                    
+                    console.log(data.review)
+                    if($('#user_review_id').length > 0){
+                        console.log("review already present")
+                        console.log(data.rating)
+                        $('#user_review_id').html(data.review)
+                        for(let i=0;i<data.rating;i++){
+                            output += "<i class='fa-solid fa-xs ps-2 fa-star text-warning'></i>"
+                        }
+                        $("#rating_stars").html(output)
+                    }else{
+                        console.log("new review adding with stars")
+                        console.log(data.rating)
+                        for(let i=0;i<data.rating;i++){
+                            output += "<i class='fa-solid fa-xs ps-2 fa-star text-warning'></i>"
+                        }
+
+                        var html="<div><i class='fa-solid fa-xl fa-user me-4'></i><span><b>"+data.username+"</b><span id='rating_stars'>"+output+"</span></span></div><div id='user_review_id' class='my-2 ps-1' style='font-size:20px'>"+data.review+".<br></div>"
+                        $("#review_parent_div").prepend(html);
+                    }
+
+                }     
+                
+            },
+
+        })
+    })
+
+    {% comment %} $('#filter_search_button_id').on('click',function(){
+        
+        $('#price_filter_form_id').submit();
+        $('#main_filter_form_id').submit();
+    }) {% endcomment %}
+
+   
+</script>

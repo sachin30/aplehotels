@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}Registration{% endblock title %}
+{% block content %}
+<section class="w3l-availability-form" id="register">
+    <!-- /w3l-availability-form-section -->
+    
+    <div class="w3l-availability-form-main py-5">
+        <div class="container pt-lg-3 pb-lg-5">
+            <div class="forms-top">
+                <div class="form-right">
+                    <div class="form-inner-cont">
+                        <h3 class="text-center">Registration</h3>
+                        <form action="{% url 'pages:registration' %}" method="post" id="formid" novalidate>
+                            {% csrf_token %}
+                            
+                            <div class="row book-form justify-content-center">
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>First Name </label>
+                                    
+                                    {{form.first_name}}
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>Last Name </label>
+                                    
+                                    {{form.last_name}}
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>User Name</label>
+                                    
+                                    {{form.username}}
+                                    {% for key, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            {% if 'username' in error %} 
+                                                <div class="errorb">{{error}}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>Email</label>
+                                    
+                                    {{form.email}}
+                                    {% for key, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            {% if 'email' in error %} 
+                                            <div class="errorb">{{error}}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>Password </label>
+                                    
+                                    {{form.password1}}
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <label>Confirm Password </label>
+                                    
+                                    {{form.password2}}
+                                    {% for key, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            {% if 'password' in error %} 
+                                            <div class="errorb">{{error}}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                <div class="bottom-btn col-md-8 col-sm-8 mt-4">
+                                    <button type='submit' class="btn btn-style btn-primary w-100 px-2" onclick="register_validation()">Register</button>
+                                </div>
+                                <div class="form-input col-md-8 col-sm-8 mt-3">
+                                    <p style="color:white; margin-top:10px"><b>Already have an account?</b>  <a class="btn btn-success" style="margin:auto;float:right" href="{%url "pages:userlogin" %}">Sign In</a></p>
+    
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    
+    $("#id_password1").attr({style:"height:50px"})
+    $("#id_password2").attr({style:"height:50px"})
+    $("#first_name_id").attr({style:"height:50px"})
+    $("#last_name_id").attr({style:"height:50px"})
+    $("#username_id").attr({style:"height:50px"})
+    $("#email_id").attr({style:"height:50px"})
+
+function register_validation(){
+    $("#formid").validate({
+        rules: {
+                    first_name:{
+                        required:true
+                    },
+                    last_name:{
+                        required:true
+                    },
+                    username:{
+                        required:true
+                    },
+                    email:{
+                        required:true,
+                        email:true
+                    },
+                    password1:{
+                        required:true
+                    },
+                    password2:{
+                        required:true,
+                        equalTo:"#id_password1"
+                    }
+                },
+                
+        messages: {
+                    first_name:{
+                        required:"Please enter first name"
+                    },
+                    last_name:{
+                        required:"Please enter last name"
+                    },
+                    username:{
+                        required:"Please enter username"
+                    },
+                    email:{
+                        required:"Please enter email",
+                        email:"email format must be name@domain.com"
+                    },
+                    password1:{
+                        required:"Please enter password"
+                    },
+                    password2:{
+                        required:"Please enter password to confirm",
+                        equalTo:"passwords did not match"
+                    }
+                }
+    });
+    
+    
+}
+</script>
+
+{% endblock content %}

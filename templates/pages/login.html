@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+<section class='container-fluid' id='login'>
+    {% include 'pages/message.html' %}
+    <div class='container' style="height:900px">
+        <form method='post' id="loginform">
+            <div class='row justify-content-center'>   
+                {% csrf_token %}
+                <div class='col-md-8 col-sm-8 text-center mt-4'>
+                    <h2><string>Login</strong></h2>
+                </div>
+                <div class="form-input col-md-8 col-sm-8 mt-3 ">
+                    <label>First Name </label>
+                    <input type="text" class="form-control" placeholder="Username" name="Name">
+                </div>
+                <div class="form-input col-md-8 col-sm-8 mt-3">
+                    <label>Password </label>
+                    <input type="password" class="form-control" placeholder="*****" name="Password">
+                </div>
+            
+                <div class='form-input col-md-8 col-sm-8 mt-3'>
+                    <button type="submit" class="btn btn-success mb-3" onclick="login_validation()">Login</button>
+                    
+                    <p style="color:white"><strong> Dont have an account? </strong> <a class="btn btn-success" style="float:right" href="{%url "pages:registration" %}">Sign Up</a></p><br>
+                    <p style="color:white"> <strong>Forgot Password?  </strong><a class="btn btn-primary" style="float:right;color:yellow" href="{%url "password_reset" %}">Reset Password</a></p>
+                </div>
+            </div>
+        </form>
+    </div>
+<section>
+<script>
+    $(".form-control").attr({style:"height:50px"})
+    
+        
+    function login_validation(){
+        $("#loginform").validate({
+            rules:{
+                Name:{
+                    required:true
+                },
+                Password:{
+                    required:true
+                }
+            },
+            messages:{
+                Name:{
+                    required:"Enter Your Username"
+                },
+                Password:{
+                    required:"Enter Your Password"
+                }
+            }
+        })
+    }
+
+
+    
+</script>
+{% endblock content %}
+

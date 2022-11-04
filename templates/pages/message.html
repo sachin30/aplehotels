@@ -1,0 +1,14 @@
+{% if messages %}
+  {% for message in messages %}
+    <div id="messageid" class="alert alert-dismissible alert-success">
+      <button type="button" onclick='close_message()' class="btn-close" data-dismiss="messageid">
+      </button>
+      <strong>{{message}}</strong>
+    </div>
+    <script>
+      function close_message(){
+        $('#messageid').remove();
+      }
+    </script>
+ {% endfor %}
+{% endif %}

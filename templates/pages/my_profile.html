@@ -1,0 +1,110 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About Us{% endblock title %}
+{% block content %}
+<section class="container-fluid" style='height:800px'>
+    
+    <div class='row'>
+        <div class='col-3 border'>
+           
+            <div onclick='profile_info()' id='my_profile_div_id' class='my-4 border bg-warning py-2' style="cursor:pointer">
+                <h4>Profile Info</h4> 
+            </div>
+            <div onclick='reservations_info()' id='reservations_div_id' class='my-4 border bg-warning py-2' style="cursor:pointer">
+                <h4>Reservations Info</h4>   
+            </div>
+            <div onclick='change_password_page()' id='change_password_div_id' class='my-4 border bg-warning py-2' style="cursor:pointer">
+                <h4>Change Password</h4>
+            </div>
+
+            <!-- div clicking trigger modal -->
+            <div class='my-4 border bg-danger py-2' data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor:pointer">
+                <h4>Logout</h4>
+                                
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Logout</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        Are you sure about logging out?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a type="button" class="btn btn-primary" href="{% url 'pages:userlogout' %}">Logout</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class='col-9 border' >
+            <div id='profile_content'>
+                <div class='row'>
+                    <div class="col-lg-3 col-sm-8 border">
+                        <img class='border border-dark' height=300 width=300 src="{% static 'images/profile_image.png' %}">
+                        
+                    </div>
+                    <div class="col-lg-9 col-sm-8 border pt-2">
+                        <table class='table table-striped'>
+                            <tr>
+                                <th>Name :</th>
+                                <td>{{request.user.first_name|capfirst}}  {{request.user.last_name|capfirst}} </td>
+                            </tr>
+                            <tr>
+                                <th>Email :</th>
+                                <td>{{request.user.email}}  </td>
+                            </tr>
+                            <tr>
+                                <th>Username :</th>
+                                <td>{{request.user.username}} </td>
+                            </tr>
+                            
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var logout_url = "{% url 'pages:userlogout' %}"
+    var my_profile_url = "{% url 'pages:my_profile' %}";
+    var change_password_url = "{% url 'pages:change_password' %}";
+    var reservations_url="{% url 'pages:user_reservations' %}";
+    var img_source="{% static 'images/profile_image.png' %}";
+    var user_id="{{request.user.id}}";
+    var user_username = "{{request.user.username}}";
+    var user_email = "{{request.user.email}}";
+    var user_first_name = "{{request.user.first_name|capfirst}}";
+    var user_last_name = "{{request.user.last_name|capfirst}}";
+    var csr = "{{csrf_token}}";
+</script>
+{% comment %} <div>
+    <h3 class='my-3'>Change Password</h3>
+    <h5>Enter Your new password</h5>
+    <input class='form-control' name='password1' id='password1'>
+
+    <h5 class='my-3'>Confirm Changed Password</div>
+    <input class='form-control' name='password2' id='password2'>
+    
+    <button class='btn btn-success my-3' onclick='change_password'>Change Password</button>
+</div> {% endcomment %}
+{% comment %} 
+<div>
+    <h3>Password changed successfully</h3>
+    <a class='btn btn-success' href='my_profile_url'> Go to Profile</a>
+</div> {% endcomment %}
+
+{% endblock content %}
+

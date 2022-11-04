@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Room{%endblock title%}
+{% block content %}
+
+<section class='container-fluid w-75' style="height:800px">
+
+            <div class="container">
+                <div style=""><img style='float:right;' src='/media/{{hotel.main_photo}}' width=200 height=200 ></div>
+                <div class=''>
+                    <h3><b>{{hotel.name|title}}</b></h3>
+                    <div class='my-2'>
+                        <p class="pt-3" style="font-size:20px"><b>Rating :</b> <span class="bg-success rounded text-dark px-2 pb-1 pt-2"><b>{{hotel.get_average_rating|floatformat:1}}</b><i class="fa-solid fa-xs ps-2 pe-1 fa-star text-warning"></i></span> (<b>{{hotel.rating_customers}}</b> Customers)</p>                     
+                    </div>
+                    <p><b class='rounded py-1 px-1 my-3' style="background-image: linear-gradient(to bottom right, blue, cyan);font-size:20px;font-family:sans">{{request.session.total_days}}{%if request.session.total_days == 1 %}  Night {% else %} Nights{% endif %}</b></p>
+                </div>
+                <div class='my-2'>
+                    <h5>From :-</h5>
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{request.session.book_from}}</b></h5>
+                    <h5>To :-</h5>
+                    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>{{request.session.book_till}}</b></h5>
+                </div>
+                <div class='my-2'>
+                    <h5> <b>{{request.session.room_count}}  {{request.session.room_type|capfirst}} </b>{% if request.session.room_count == '1' %} Room {% else %} Rooms {% endif %}</h5>
+                </div>
+                <hr>
+                <div class='my-4'>
+                   <h5>Total Bill :-<span style="float:right"><i class="fa fa-inr"></i><b>{{request.session.total_bill}}</b></span></h5>
+                   
+                </div>
+                <button class='btn btn-success mt-3 mb-2' style="float:right" id="rzp-button1">Bill Pay</button>
+                
+                <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+                <script>
+                var options = {
+                    "key": "rzp_test_JNAse3qpqKjhlQ", // Enter the Key ID generated from the Dashboard
+                    "amount": "{% widthratio request.session.total_bill 1 100 %}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                    "currency": "INR",
+                    "name": "{{hotel.name}}",
+                    "description": "{{hotel.description}}",
+                    "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                    "callback_url": "{{callback_url}}",
+                    "prefill": {
+                        "name": "sachin",
+                        "email": "sachin.pandhare@example.com",
+                    },
+                    "notes": {
+                        "address": "earth"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                document.getElementById('rzp-button1').onclick = function(e){
+                    rzp1.open();
+                    e.preventDefault();
+                }
+                rzp1.on('payment.failed', function (response){
+                        alert(response.error.code);
+                        alert(response.error.description);
+                        alert(response.error.source);
+                        alert(response.error.step);
+                        alert(response.error.reason);
+                        alert(response.error.metadata.order_id);
+                        alert(response.error.metadata.payment_id);
+                });
+                
+                </script>
+        
+            </div>
+</section>
+{% endblock content %}

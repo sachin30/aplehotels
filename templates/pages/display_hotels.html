@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% block title %}Hotels{% endblock title %}
+{% block content %}
+
+<section class="w3l-availability-form sticky-lg-top sticky-md-top" id="search" style="background-color:lightcyan">
+    <!-- /w3l-availability-form-section -->
+    <div class="w3l-availability-form-main">
+        <div class="container-fluid pt-lg-3 pb-lg-5">
+            <div class="forms-top">
+                <div class="form-right">
+                    <div class="form-inner-cont">
+                        <form action="{% url 'pages:display_hotels'%}" method="POST" class="signin-form" id="main_filter_form_id">
+                            {% csrf_token %}
+                            <div class="row book-form">
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>City:</label>
+                                    <input id="id_city" type='text' name='city' value="{{request.session.city}}">
+                                </div>
+                                
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Book From: </label>
+                                    {% comment %} {{hotel_filter.form.available_rooms}} {% endcomment %}
+                                    <input id='book_from_id' type='date' name='book_from' onchange='date_validation()' value="{{request.session.book_from}}">
+                                </div>
+                                
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Book Till: </label>
+                                    <input id='book_till_id' type="date" name='book_till' onchange='date_validation()' value="{{request.session.book_till}}" >
+                                </div>
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Room Type: </label>
+                                    <select name="room_type" id="room_type_id">
+                                        <option value="standard" {% if request.session.room_type == 'standard' %}selected{% endif %}>Standard</option>
+                                        <option value="deluxe" {% if request.session.room_type == 'deluxe' %}selected{% endif %}>Deluxe</option>
+                                        <option value="suite" {% if request.session.room_type == 'suite' %}selected{% endif %}>Suite</option>
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Rooms: </label>
+                                
+                                    <select name="room_count" id="room_count_id">
+                                        <option value="1" {% if request.session.room_count == '1' %}selected{% endif %}>1</option>
+                                        <option value="2" {% if request.session.room_count == '2' %}selected{% endif %}>2</option>
+                                        <option value="3" {% if request.session.room_count == '3' %}selected{% endif %}>3</option>
+                                        <option value="4" {% if request.session.room_count == '4' %}selected{% endif %}>4</option>
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="bottom-btn col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Check availability </label>
+                                    <button class="btn btn-style btn-primary w-100 px-2" type="submit" >Check Availability</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    {% include 'pages/message.html' %}
+    
+    <div class="container-fluid">
+        <div class="row border">
+            <!--left panel-->
+            <div id='side-shutter-button'>
+                <button type='button' id='shutter-button' class='btn btn-info'> > </button>
+            </div>
+            <div class="col-lg-2 col-sm-12 col-md-2 border" id='side-panel-div'>
+                <form id='price_filter_form_id' method="POST" action='{% url "pages:display_hotels" %}'>
+                    {% csrf_token %}
+                    <div>
+                            <h4>Price Filter</h4>
+                            
+                            <select class='form-select' name="price_filter" id="price_filter_id">
+                                <option value="low-to-high" selected>Low To High </option>
+                                <option value="high-to-low">High To low </option>
+                            </select>
+                        
+                            {% comment %} <form action="{% url 'pages:display_hotels' %}"  method="POST" id="amenity_form">
+                            {% csrf_token %}
+                            {% for amenity in amenities %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="{{amenity.id}}" name="amenity" value="{{amenity.id}}">
+                                    <label class="form-check-label">{{amenity.name|title}}</label>
+                                </div> 
+                            {% endfor %}
+                                <button class="btn btn-success" name="amenity_form_button" type="submit">Sort</button>
+                            </form> {% endcomment %}
+                            
+                    </div>
+                    
+                </form>
+                <div class="my-1">
+                    <button class="btn btn-success" id='filter_search_button_id' name="filter_search_button">Search</button>
+                </div>
+            </div>
+
+            <div class="col-lg-10 col-sm-8 border-none" id="hotel_list_div_id">
+            {% if hotels %}
+                {% for hotel in hotels %}
+                <div class="row border-none">
+                    <div class="col-lg-3">
+                        <h2 class='fw-bolder' style="font-family:Inter,sans-serif">{{hotel.name|safe|title}}</h2>
+
+                       <img class='my-3' src='/media/{{hotel.main_photo}}' width='100%' height="370">
+                    </div>
+                    <div class="col-lg-1 col-sm-12" style="padding-top:50px">
+                        <div class='row py-1 border-dark' style="height:33%" >
+                            <img class="" src='/media/{{hotel.photo_2}}' style="padding-bottom:10px;padding-left:0px;padding-right:0px" width='100%' height="100%">
+                        </div>
+                        <div class='row py-1 border-dark' style="height:33%" >
+                            <img class="" src='/media/{{hotel.photo_3}}' style="padding-bottom:10px;padding-left:0px;padding-right:0px" width='100%' height="100%">    
+                        </div>
+                        <div class='row py-1 border-dark' style="height:33%;"  >
+                            <img class="" src='/media/{{hotel.photo_4}}' style="padding-bottom:10px;padding-left:0px;padding-right:0px" width='100%' height="100%">    
+                        </div>
+                       
+                    </div>
+                    <div class="col-8 ">
+                        <div class='row ' style="height:125px">
+                            <h2 class='fw-bolder pt-2' style="font-family:Inter,sans-serif;height:33%">{{hotel.name|safe|title}}</h2>
+                            <p class="pt-2" style="font-family:Inter,sans-serif;font-size:20px;height:33%">{{hotel.name|safe|capfirst}},{{hotel.address}},{{hotel.city}},{{hotel.state}}, {{hotel.zipcode}}.</p>
+                            <div style="height:34%"></div>
+                        </div>
+                        <div class='row ' style="height:125px">
+                            <p class="pt-3" style="font-size:20px">Rating : <span class="bg-success rounded text-dark px-2 pb-1 pt-2"><b>{{hotel.get_average_rating|floatformat:1}}</b><i class="fa-solid fa-xs ps-2 pe-1 fa-star text-warning"></i></span> (<b>{{hotel.rating_customers}}</b> Customers)</p>
+                            <p class="pt-3" style="font-size:18px">Amenities : 
+                                <span>
+                                    
+                                    {% for amenity in hotel.get_amenities|slice:'0:3' %}
+                                        {% if 'bed' in amenity %}
+                                        <i class="fa-solid fa-bed pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'wifi' in amenity %}
+                                        <i class="fa-solid fa-wifi pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'water' in amenity %}
+                                        <i class="fa-solid fa-shower pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'breakfast' in amenity %}
+                                        <i class="fa-solid fa-hamburger"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'coffee' in amenity %}
+                                        <i class="fa-solid fa-coffee pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'television' in amenity %}
+                                        <i class="fa-solid fa-tv pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'first-aid' in amenity %}
+                                        <i class="fa-solid fa-medkit pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'sanitization' in amenity %}
+                                        <i class="fa-solid fa-pump-medical pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'gym' in amenity %}
+                                        <i class="fa-solid fa-dumbbell pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'parking' in amenity %}
+                                        <i class="fa-solid fa-car pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+                                        {% if 'swimming' in amenity %}
+                                        <i class="fa-solid fa-water-ladder pe-1"></i>{{amenity|capfirst}},
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if hotel.get_amenities|length > 3 %}
+                                       <span>+{{hotel.get_amenities|length|add:'-3'}} More<span>
+                                    {% endif %}
+                                </span>
+                            <p>
+                        </div>
+                        <div class='row' style="height:172px">
+                            
+                            <div style="font-size:18px">
+                                {% if hotel.customer_visits is None%}
+                                    Be the First to Book at Brand new place
+                                
+                                {% else %}
+                                    Served over {{hotel.customer_visits}} customers 
+                                {% endif %}
+                            </div>
+                            <div style='font-size:30px'>
+                                <i class='fa fa-inr fa-l'></i><span style="font-family:ariel">{{hotel.room_rent}}</span>
+                                <p><sup style="color:red">Per Room Per Night<sup></p>
+                                
+                                <div style="float:right;margin-bottom:10px">
+                                    <a class="btn btn-primary text-white" href="{% url "pages:room_book" hotel.id %}">Book NOW</a>
+                                </div>
+                                <div style="float:right;margin-bottom:10px;margin-right:10px">
+                                    <a class="btn btn-primary text-white" id="explore_hotel_button_id" href="{% url 'pages:display_rooms' hotel.id %}"  name="explore_button">Explore Hotel</a>
+                                </div>
+                            </div>
+                            
+
+                        </div>    
+                    </div>
+                </div>
+                <hr/>
+                {% endfor %}
+                <div class="pagination px-3 py-3 justify-content-center">
+                    <span class="step-links">
+                        {% if hotels.has_previous %}
+                            <a class="btn btn-primary" href="?page=1">&laquo; first</a>
+                            <a class="btn btn-primary" href="?page={{hotels.previous_page_number }}">previous</a>
+                        {% endif %}
+                
+                        <span class="current text-dark">
+                            Page {{hotels.number }} of {{hotels.paginator.num_pages }}.
+                        </span>
+                
+                        {% if hotels.has_next %}
+                            <a class="btn btn-primary" href="?page={{hotels.next_page_number }}">next</a>
+                            <a class="btn btn-primary" href="?page={{hotels.paginator.num_pages }}">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% else %}  
+                <div>
+                    <h1>NO Hotels Available for given requirement</h1>
+                </div>
+
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</section>                  
+{% comment %} <script>
+    console.log("in script");
+    $('#hotel_list_div_id').on('click','#explore_hotel_button_id',function(){
+        console.log("button clicked")
+        let city = '{{city}}';
+        let start_date ='{{book_from}}';
+        let end_date = '{{book_till}}';
+        let room_type = '{{room_type}}';
+        
+        let room_count = '{{room_count}}';
+        console.log(typeof(room_count))
+        let csr=$("input[name=csrfmiddlewaretoken]").val();
+        let btn="explore_button";
+        let hotel_button_id= $(this).attr('data-hotel_id');
+        console.log(csr)
+        //document.location.href=`/display_rooms/${hotel_button_id}`
+
+        $.ajax({
+            url:"{% url 'pages:display_rooms' 'hotel'%}".replace('hotel',hotel_button_id),
+            method:"POST",
+            data:{city:city,start_date:start_date,end_date:end_date,room_type:room_type,room_count:room_count,btn:btn,csrfmiddlewaretoken:csr},
+            success:function(data){
+                console.log('success')
+                console.log(data.status)
+                console.log(data.room_type)
+            }
+        })
+    })
+
+</script> {% endcomment %}
+{% endblock content %}

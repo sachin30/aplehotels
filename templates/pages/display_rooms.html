@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Rooms{% endblock title %}
+{% block content %}
+<section class="w3l-availability-form " id="search" style="background-color:lightcyan;position:sticky;top:0;z-index:2">
+    <!-- /w3l-availability-form-section -->
+    <div class="w3l-availability-form-main">
+        <div class="container-fluid pt-lg-3 pb-lg-5">
+            <div class="forms-top">
+                <div class="form-right">
+                    <div class="form-inner-cont">
+                        <form action="{% url 'pages:display_hotels'%}" method="POST" class="signin-form" id="main_filter_form_id">
+                            {% csrf_token %}
+                            <div class="row book-form">
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>City:</label>
+                                    <input id="id_city" type='text' name='city' value="{{request.session.city}}">
+                                </div>
+                                
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Book From: </label>
+                                    {% comment %} {{hotel_filter.form.available_rooms}} {% endcomment %}
+                                    <input id='book_from_id' type='date' name='book_from' onchange='date_validation()' value="{{request.session.book_from}}">
+                                </div>
+                                
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Book Till: </label>
+                                    <input id='book_till_id' type="date" name='book_till' onchange='date_validation()' value="{{request.session.book_till}}" >
+                                </div>
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Room Type: </label>
+                                    <select name="room_type" id="room_type_id">
+                                        <option value="standard" {% if request.session.room_type == 'standard' %}selected{% endif %}>Standard</option>
+                                        <option value="deluxe" {% if request.session.room_type == 'deluxe' %}selected{% endif %}>Deluxe</option>
+                                        <option value="suite" {% if request.session.room_type == 'suite' %}selected{% endif %}>Suite</option>
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="form-input col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Rooms: </label>
+                                
+                                    <select name="room_count" id="room_count_id">
+                                        <option value="1" {% if request.session.room_count == '1' %}selected{% endif %}>1</option>
+                                        <option value="2" {% if request.session.room_count == '2' %}selected{% endif %}>2</option>
+                                        <option value="3" {% if request.session.room_count == '3' %}selected{% endif %}>3</option>
+                                        <option value="4" {% if request.session.room_count == '4' %}selected{% endif %}>4</option>
+                                        
+                                    </select>
+                                </div>
+
+                                <div class="bottom-btn col-lg-2 col-sm-4 col-xs-5 col-md-4 mt-3">
+                                    <label>Check availability </label>
+                                    <button class="btn btn-style btn-primary w-100 px-2" type="submit" >Check Availability</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-fluid w3l-main-slider px-5" id="rooms">
+    {% include 'pages/message.html' %}
+    
+     <div class="companies20-content">
+         <div class="owl-one owl-carousel owl-theme">
+             <div class="item">
+                 <li>
+                    <div>
+                        <img src='/media/{{hotel.main_photo}}' style='height:800px; width:100%'>
+                    </div>
+                 </li>
+             </div>
+             <div class="item">
+                 <li>
+                    <div>
+                        <img src='/media/{{hotel.photo_2}}' style='height:800px; width:100%'>                     
+                    </div>
+                 </li>
+             </div>
+             <div class="item">
+                 <li>
+                    <div>
+                        <img src='/media/{{hotel.photo_3}}' style='height:800px; width:100%'>                    
+                    </div>
+                 </li>
+             </div>
+             <div class="item">
+                 <li>
+                    <div>
+                        <img src='/media/{{hotel.photo_4}}' style='height:800px; width:100%'>                 
+                    </div>
+                 </li>
+             </div>
+         </div>
+     </div>
+ </section>
+ <!-- rooms-->
+ <section class='p-5'>
+    <div>
+        <p style="font-size:50px;font-family:sans">{{hotel.name|title}} - <span class="bg-success rounded text-white px-2 " ><b style="font-size:40px;font-family:arial">{{hotel.get_average_rating|floatformat:1}}</b><i class="fa-solid fa-2xs ps-2 pe-1 fa-star text-warning"></i></span></p>
+        <p style="font-size:30px;font-family:sans;margin-top:20px">{{hotel.address|capfirst}},{{hotel.city}},{{hotel.state}}.</p>
+        <div class="text-right">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Enquiry</button>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="background-color:lightcyan">
+                    <div class="modal-header bg-success">
+                        <h5 class="modal-title" id="exampleModalLabel">{{property_details.title|capfirst}}-Enquiry</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!--form for enquiry-->
+                    <form  id='enquiryformid' method="POST" action='{% url "pages:hotel_enquiry" %}'>
+                        {% csrf_token %}
+                        <div class="modal-body row justify-content-center">
+                            <div class='col'>
+                                
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    {{enquiry_form.name}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    {{enquiry_form.email}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number:</label>
+                                    {{enquiry_form.phone}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Subject:</label>
+                                    {{enquiry_form.subject}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Message:</label>
+                                    {{enquiry_form.message}}
+                                </div>
+                                <div style="display:none">
+                                    <label>Selected Hotel:</label>
+                                    <input value="{{hotel.id}}" class="form-control border" type="text" name="enquired_hotel" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-success">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="enquirybutton" onclick="validations()">Enquiry</button>
+
+                        </div>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+ </section>
+ {% comment %} <section class="w3l-availability-form" id="searchroom">
+    <!-- /w3l-availability-form-section -->
+    <div class="w3l-availability-form-main py-5">
+        <div class="container pt-lg-3 pb-lg-5">
+            <div class="forms-top">
+                <div class="form-right">
+                    <div class="form-inner-cont">
+                        <form action="{% url 'pages:display_rooms' hotel.id %}" method="POST" class="signin-form">
+                            {% csrf_token %}
+                            <div class="row book-form">
+                                
+                                <div class="form-input col-md-4 col-sm-6 mt-3">
+                                    <label>By Rent</label>
+                                    {{filtered_rooms.form.rent}}
+                                </div>
+                                <div class="form-input col-md-4 col-sm-6 mt-3">
+                                    <label>By type</label>
+                                    {{filtered_rooms.form.room_type}}
+                                </div>
+                                <div class="form-input col-md-4 col-sm-6 mt-3">
+                                    <label>Ordering</label>
+                                    {{filtered_rooms.form.ordering}}
+                                </div>
+                                <div class="bottom-btn col-md-4 col-sm-6 mt-3">
+                                    <label>Sort</label>
+
+                                    <button class="btn btn-style btn-primary w-100 px-2" type="submit" >Sort</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> {% endcomment %}
+
+ <section class="container-fluid">
+    <div class="row justify-content-center w3pvtits-services-row text-center">
+        {%if rooms %}  
+        <div style="height:50px">
+            <h2 style="background-image: linear-gradient(to bottom right, red, yellow);width:200px;font-family:sans"> Room Types Available: </h2>
+        
+        </div>  
+        
+            {% for room in rooms%}
+                
+                <div class='col-lg-3 col-sm-12 my-2 px-5'  style="">
+                    <div class="card text-left" style='width:100%'>
+                        <div class="card__header">
+                            <img src="/media/{{room.room_photo}}" alt="card__image" class="card__image" width="100%" height="300">
+                        </div>
+                        <div class="card__body">
+                            <span class="tag tag-blue">{{room.room_type|capfirst}}</span>
+                            {% comment %} <h5><b>Room Number: {{room.room_number}}</b></h5> {% endcomment %}
+                            <hr>
+                            <p style='font-size:20px'><b>Rent - </b><span><i class="fa fa-inr"></i>{{room.rent}}</span></p>
+                            {% comment %} <p style='font-size:20px'><b>Booking Status - </b><span>{{room.booking_status|capfirst}}</span></p> {% endcomment %}
+                        </div>
+                       
+                    </div>
+                </div>
+            {% endfor %}
+        {%endif%}
+    </div>
+ </section>
+ <hr/>
+ <section class='row p-5 container-fluid justify-content-center' style='background-color:lightcyan'>
+    <div class='col-10 py-1 my-2 border'>
+        <h3 class=''><b>Description:</b></h3>
+        <div class='py-3 '>    
+            
+            <p class='' style="font-size:18px">{{hotel.description|capfirst}}</p>
+        </div>
+    </div>
+    <div class='col-10 border py-1 my-2'>
+        <h3 class=''><b>Amenities:</b></h3>
+        <div class='row w-75 py-3'>
+            {% for amenity in hotel.get_amenities %}
+                {% if 'bed' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-bed pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'wifi' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-wifi pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'water' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-shower pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'breakfast' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-hamburger"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'first-aid' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-medkit pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'gym' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-dumbbell pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'coffee' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-coffee pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'television' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-tv pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'parking' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-car pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+                {% if 'swimming' in amenity %}
+                <div class='col-lg-3 my-3'>
+                    <i class="fa-solid fa-xl fa-water-ladder pe-1"></i>{{amenity|capfirst}},
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+       
+    </div>
+    {% comment %} display ratings and review {% endcomment %}
+    <div class='row py-1 my-2 justify-content-center'>
+        
+        <div class='col-lg-5 col-sm-12 w-100'>
+            <div class='row mb-4 border'>
+                <h3 class=''><b>Ratings and Reviews:</b></h3>
+                <p class="pt-3" style="font-size:20px"><b>Rating :</b> <span class="bg-success rounded text-dark px-2 pb-1 pt-2"><b>{{hotel.get_average_rating|floatformat:1}}</b><i class="fa-solid fa-xs ps-2 pe-1 fa-star text-warning"></i></span> (<b>{{hotel.rating_customers}}</b> Customers)</p>                     
+            </div>
+            {% if request.user.is_authenticated %}
+            <div class='row mb-4 border'>
+                <h3 class=''><b>Share Your Opinion About Hotel:</b></h3>
+                <form id='save_review' method='POST'>
+                {% csrf_token %}
+                </form>
+                <div class='py-3'>
+                    <div>
+                        {{form.hotel}}
+                        {{form.user}}
+                    </div>
+                    <div>  
+                        <label><b>Rate Us : </b></label>
+                        {{form.rating}}
+                    </div>
+                    <div>
+                        <label><b>Leave a Review : </b></label>
+                        <div>
+                            {{form.review}}
+                            
+                            <button type='button' id='review_post_btn' class='btn btn-success my-4'>Post</button>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class='row w-100 py-2 my-2 border' id="review_parent_div" style="">
+                {% for review in reviews|slice:10 %}
+                    <div class='col-lg-12 col-md-12 col-sm-12'>
+                        <i class="fa-solid fa-xl fa-user me-4"></i>
+                        <span >
+                            <b>{{review.user|capfirst}} -</b>
+                            
+                                {% with ''|center:review.rating as range %}
+                                <span {% if review.user == request.user %} id='rating_stars' {% endif %}>
+                                    {% for i in range %}
+                                        <i class="fa-solid fa-xs ps-2 fa-star text-warning"></i>
+                                    {% endfor %}
+                                </span>    
+                                {% endwith %}
+                            
+                        </span>
+
+                    </div>
+                    <div {% if review.user == request.user %} id='user_review_id' {% endif %} class='my-3 ps-1 col-lg-12 col-md-12 col-sm-12' style="overflow-wrap: break-word;">                    
+                        {{review.review|capfirst}}.
+                    </div> 
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class='col-lg-5 border text-center'>
+            <section style="position:sticky;top:170px;z-index:3;"> 
+                <div class='border'>
+                    {% if request.user.is_authenticated %}    
+                    <div style='background-image: linear-gradient(to bottom right, cyan, yellow);padding-top:10px;padding-bottom:10px'>
+                        <h4>Booking & Billing status</h4>
+                    </div>
+                    {% else %}
+                    <div>
+                        <a  href="{% url 'pages:userlogin' %}" class='bg-warning py-1'>Login To get Exclusive deals</a>
+                    </div>
+                    {% endif %}
+
+                    <div class='px-4 text-left pt-1'>
+                        <h4 style='background-color:lightgreen'>Total Bill:</h4>
+                        <div style="font-size:30px" class='my-1'>
+                            <span><b><i class="fa fa-inr"></i>{{request.session.total_bill|floatformat:2}}</b></span>
+                        </div>
+
+                        <h4 style='background-color:lightgreen'>Booking Period:</h4>
+                        <div class='my-1'>
+                            <div style="font-size:20px"><b>From : {{ request.session.book_from}}</b></div>
+                            <div style="font-size:20px"><b>To &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ request.session.book_till }}</b></div>
+                        </div>
+
+                        <h4 style='background-color:lightgreen'>Room Type:</h4>
+                        <div style="" class='my-1'>
+                            <p style="font-size:20px"><b>{{request.session.room_type|capfirst}}</b></p>
+                        </div>
+
+                        <h4 style='background-color:lightgreen'>Total Rooms:</h4>
+                        <div style="" class='my-1'>
+                            <p style="font-size:20px"><b>{{request.session.room_count|capfirst}}</b></p>
+                        </div>
+                    </div>
+                    <form method='POST' action="{% url 'pages:room_book' hotel.id %}">
+                        {% csrf_token %}
+                        <button type='submit' class='btn btn-danger' >Continue to Book</button>
+                    </form>
+                </div>
+            </section>
+            
+        </div>
+        
+        
+        
+    </div>
+    <div id="updating_data">
+        {% for review in reviews %}
+            {% if review.user == request.user%}
+                <input id='current_review_id' name='reviewid' type='hidden' value='{{review.id}}'>
+                <input id='existing_review_rating' name='review_rating' type='hidden' value='{{review.rating}}'>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% comment %} {% else %}
+            <input id='first_review_id' name='reviewid' type='hidden' value=''> {% endcomment %}
+    {% comment %} review system {% endcomment %}
+        
+    <script>
+
+        $("#id_hotel").attr("value",'{{hotel.id }}');
+        $("#id_user").attr("value",'{{request.user.id}}');
+        
+        
+        
+        {% comment %} $("#id_review").attr("value",'{{}}');
+        $("#id_reating").attr("value",'{{}}'); {% endcomment %}
+        {% comment %} console.log('values added in input field') {% endcomment %}
+        
+    </script>
+</section>
+
+ 
+{% endblock content %}
