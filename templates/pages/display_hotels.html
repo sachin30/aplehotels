@@ -74,13 +74,14 @@
                 <form id='price_filter_form_id' method="POST" action='{% url "pages:display_hotels" %}'>
                     {% csrf_token %}
                     <div>
-                            <h4>Price Filter</h4>
+                            Space to add extra content in future.
+                            {% comment %} <h4>Price Filter</h4>
                             
                             <select class='form-select' name="price_filter" id="price_filter_id">
                                 <option value="low-to-high" selected>Low To High </option>
                                 <option value="high-to-low">High To low </option>
                             </select>
-                        
+                         {% endcomment %}
                             {% comment %} <form action="{% url 'pages:display_hotels' %}"  method="POST" id="amenity_form">
                             {% csrf_token %}
                             {% for amenity in amenities %}
