@@ -37,7 +37,7 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
 
        django-admin create superuser
       
-5. Change the directory to out project with requirements.txt file within,
+5. Change the directory to our project with requirements.txt file within,
 6. To install all of the required packages for project run following command,
 
        pip install -r requirements.txt
@@ -66,4 +66,4 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
     
     127.0.0.1:800
     
-> **Note:** if u face any genuine problem, contact me at sachinpandhare1996@gmail.com.I am also new to django. Its my first portfolio project.Thank You.
+> **Note:** if u face any genuine problem, contact me at sachinpandhare1996@gmail.com . I am also new to django. Its my first portfolio project.Thank You.
