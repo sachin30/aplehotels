@@ -64,6 +64,6 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
 
 12. The project will run on following address by default,
     
-    127.0.0.1:800
+    127.0.0.1:8000
     
 > **Note:** if u face any genuine problem, contact me at sachinpandhare1996@gmail.com . I am also new to django. Its my first portfolio project.Thank You.
