@@ -175,7 +175,7 @@ EMAIL_USE_TLS = True
 
 
 #Razorpay payment gateway
-razorpay_id = "rzp_test_JNAse3qpqKjhlQ"
+razorpay_id = "rzp_test_JNAse3qpqKjh"
 razorpay_account_id = "DXvk6ufSfBnFBVlOkpqyxLYt"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
