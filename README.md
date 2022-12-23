@@ -18,7 +18,7 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
       
       eg. cd C:\Users\user\Desktop\UserDjangoProject> pip install virtualenv
       
-  Create the virtual environment using following command.(can use any name for virtual environment instead 'venv')
+  Create the virtual environment using following command.(can use any name for virtual environment other than 'venv')
   
       virtualenv -p python3 venv
       
