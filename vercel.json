@@ -1,14 +1,29 @@
 
+
 {
-    "builds": [{
-        "src": "hotels/wsgi.py",
-        "use": "@ardnt/vercel-python-wsgi",
-        "config": { "maxLambdaSize": "15mb" }
-    }],
+    "version": 2,
+    "builds": [
+    {
+    "src": "hotels/wsgi.py",
+    "use": "@vercel/python",
+    "config": { "maxLambdaSize": "15mb", "runtime": "python3.10.5" }
+    },
+    {
+    "src": "build_files.sh",
+    "use": "@vercel/static-build",
+    "config": {
+    "distDir": "assets"
+     }
+    }
+    ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "hotels/wsgi.py"
-        }
+    {
+    "src": "/static/(.*)",
+    "dest": "/static/$1"
+    },
+    {
+    "src": "/(.*)",
+    "dest": "hotels/wsgi.py"
+    }
     ]
-}
+    }
