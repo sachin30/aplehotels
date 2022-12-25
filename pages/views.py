@@ -25,6 +25,7 @@ from datetime import timedelta
 import pandas
 from django.core.files.storage import FileSystemStorage
 #Celery
+#this is for admin field to update data on mouse double click js event
 @loginfirst
 def hotel_ajax_save(request):
     if request.method == "POST":    
