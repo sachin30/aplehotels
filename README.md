@@ -18,7 +18,7 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
       
       eg. cd C:\Users\user\Desktop\UserDjangoProject> pip install virtualenv
       
-  Create the virtual environment using following command.(can use any name for virtual environment instead 'venv')
+  Create the virtual environment using following command.(can use any name for virtual environment other than 'venv')
   
       virtualenv -p python3 venv
       
@@ -37,7 +37,7 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
 
        django-admin create superuser
       
-5. Change the directory to out project with requirements.txt file within,
+5. Change the directory to our project with requirements.txt file within,
 6. To install all of the required packages for project run following command,
 
        pip install -r requirements.txt
@@ -64,6 +64,6 @@ Aplehotels is a platform for online booking of hotels for reservations. Customer
 
 12. The project will run on following address by default,
     
-    127.0.0.1:800
+    127.0.0.1:8000
     
-> **Note:** if u face any genuine problem, contact me at sachinpandhare1996@gmail.com.I am also new to django. Its my first portfolio project.Thank You.
+> **Note:** if u face any genuine problem, contact me at sachinpandhare1996@gmail.com . I am also new to django. Its my first portfolio project.Thank You.
