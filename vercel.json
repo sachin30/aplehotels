@@ -2,7 +2,7 @@
 
 {
     "version": 2,
-    "ignoreCommand": "pip3.9 install --disable-pip-version-check --target . --upgrade -r /vercel/path0/requirements.txt . python setup.py egg_info",
+    "ignoreCommand": "pip3.9 install --disable-pip-version-check --target . --upgrade -r /vercel/path0/requirements.txt",
     
     "builds": [
     
