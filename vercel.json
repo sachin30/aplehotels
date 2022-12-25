@@ -2,6 +2,7 @@
 
 {
     "version": 2,
+    "installCommand": "pip3.9 install --disable-pip-version-check --target . --upgrade -r /vercel/path0/requirements.txt",
     
     "builds": [
     
@@ -17,6 +18,7 @@
     "distDir": "assets"
      }
     }
+
     ],
     "routes": [
     {
